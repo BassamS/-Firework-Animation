@@ -1,8 +1,10 @@
+# 20 22  https://www.youtube.com/watch?v=8nIi2x2m6yE
 import pygame
 import time
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
+# WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 600, 400
 
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fireworks!")
@@ -26,7 +28,28 @@ class Projectile:
 
 
 class Firework:
-    pass
+    RADIUS = 10  # the shape
+    MAX_PROJECTILES = 50  # The max number of PROJECTILES
+    MIN_PROJECTILES = 25  # The max number of PROJECTILES
+    PROJECTILE_VEL = 4  # Speed of PROJECTILES
+
+    def __init__(self, x, y, y_vel, explode_height, color):
+        self.x = x
+        self.y = y
+        self.y_vel = y_vel
+        self.explode_height = explode_height
+        self.color = color
+        self.projectiles = []
+        self.exploded = False
+
+    # def move():
+
+    def draw(self, win):
+        if not self.exploded:
+            pygame.draw.circle(win, self.color, (self.x, self.y), self.RADIUS)
+
+        for projectile in self.projectiles:
+            projectile.draw(win)
 
 
 class Launcher:
@@ -44,6 +67,19 @@ class Launcher:
     def draw(self, win):
         pygame.draw.rect(
             win, self.COLOR, (self.x, self.y, self.WIDTH, self.HEIGHT))
+
+    def launch(self):
+        pass
+
+    def loop(self, max_width, max_height):
+        current_time = time.time()
+        time_elapsed = current_time - self.start_time
+
+        if time_elapsed * 1000 >= self.frequency:
+            self.start_time = current_time
+            self.launch()
+
+        # Move all of the fireworks
 
 
 def draw(launchers):
