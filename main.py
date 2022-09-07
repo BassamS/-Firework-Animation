@@ -29,7 +29,7 @@ class Firework:
     pass
 
 
-class luncher:
+class Launcher:
     WIDTH = 20
     HEIGHT = 20
     COLOR = 'grey'
@@ -37,7 +37,7 @@ class luncher:
     def __init__(self, x, y, frequency):
         self.x = x
         self.y = y
-        self.frequency = frequency
+        self.frequency = frequency  # In ms
         self.start_time = time.time()
         self.fireworks = []
 
@@ -46,8 +46,11 @@ class luncher:
             win, self.COLOR, (self.x, self.y, self.WIDTH, self.HEIGHT))
 
 
-def draw():
+def draw(launchers):
     win.fill("black")
+
+    for launcher in launchers:
+        launcher.draw(win)
 
     pygame.display.update()
 
@@ -55,6 +58,8 @@ def draw():
 def main():
     run = True
     clock = pygame.time.Clock()
+
+    launchers = [Launcher(100, HEIGHT - Launcher.HEIGHT, 3000)]
 
     while run:
         clock.tick(FPS)
@@ -64,7 +69,7 @@ def main():
                 run = False
                 break
 
-        draw()
+        draw(launchers)
 
     pygame.quit()
     quit()
