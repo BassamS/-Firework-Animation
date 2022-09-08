@@ -26,7 +26,31 @@ COLORS = [
 
 
 class Projectile:
-    pass
+    WIDTH = 5
+    HEIGHT = 10
+    ALPHA_DECREMENT = 3
+
+    def __init__(self, x, y, x_vel, y_vel, color):
+        self.x = x
+        self.y = y
+        self.x_vel = x_vel
+        self.y = y_vel
+        self.color = color
+        self.alpha = 255
+
+    def move(self):
+        self.x += self.x_vel
+        self.y += self.y_vel
+        self.alpha = max(0, self.alpha - self.ALPHA_DECREMENT)
+
+    def draw(self, win):
+        pass
+
+    @staticmethod
+    def drw_rect_alpha(surface, color, rect):
+        shape_surf = pygame.Surface(pygame.Rect(rect).size, pygame.SRCALPHA)
+        pygame.draw.rect(shape_surf, color, shape_surf.get_rect())
+        surface.blit(shape_surf, rect)
 
 
 class Firework:
