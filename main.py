@@ -4,8 +4,9 @@ import time
 import random
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
 # WIDTH, HEIGHT = 600, 400
+
+WIDTH, HEIGHT = 800, 600
 
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fireworks!")
@@ -68,20 +69,21 @@ class Launcher:
     def __init__(self, x, y, frequency):
         self.x = x
         self.y = y
-        self.frequency = frequency  # In ms
+        self.frequency = frequency  # ms
         self.start_time = time.time()
         self.fireworks = []
 
     def draw(self, win):
         pygame.draw.rect(
             win, self.COLOR, (self.x, self.y, self.WIDTH, self.HEIGHT))
+
         for firework in self.fireworks:
             firework.draw(win)
 
     def launch(self):
         color = random.choice(COLORS)
         explode_height = random.randrange(50, 400)
-        firework = Firework(self, self.x, self.WIDTH/2,
+        firework = Firework(self.x + self.WIDTH/2,
                             self.y, -5, explode_height, color)
         self.fireworks.append(firework)
 
@@ -93,13 +95,14 @@ class Launcher:
             self.start_time = current_time
             self.launch()
 
-        firework_to_remove = []
+        fireworks_to_remove = []
         for firework in self.fireworks:
             firework.move(max_width, max_height)
-            if firework.explode and len(firework.projectile) == 0:
-                firework_to_remove.append(firework)
-        for firework in firework_to_remove:
-            firework.remove(firework)
+            if firework.exploded and len(firework.projectiles) == 0:
+                fireworks_to_remove.append(firework)
+
+        for firework in fireworks_to_remove:
+            self.fireworks.remove(firework)
 
 
 def draw(launchers):
