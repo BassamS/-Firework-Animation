@@ -42,7 +42,14 @@ class Firework:
         self.projectiles = []
         self.exploded = False
 
-    # def move():
+    def explode(self):
+        self.exploded = True
+
+    def move(self, max_width, max_height):
+        if not self.exploded:
+            self.y += self.y_vel
+            if self.y >= self.explode_height:
+                self.explode()
 
     def draw(self, win):
         if not self.exploded:
