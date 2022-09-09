@@ -1,4 +1,5 @@
-# 30:50  https://www.youtube.com/watch?v=8nIi2x2m6yE
+# 38:00  https://www.youtube.com/watch?v=8nIi2x2m6yE
+import math
 import pygame
 import time
 import random
@@ -44,10 +45,11 @@ class Projectile:
         self.alpha = max(0, self.alpha - self.ALPHA_DECREMENT)
 
     def draw(self, win):
-        pass
+        self.draw_rect_alpha(win, self.color + (self.alpha,),
+                             (self.x, self.y, self.WIDTH, self.HEIGHT))
 
     @staticmethod
-    def drw_rect_alpha(surface, color, rect):
+    def draw_rect_alpha(surface, color, rect):
         shape_surf = pygame.Surface(pygame.Rect(rect).size, pygame.SRCALPHA)
         pygame.draw.rect(shape_surf, color, shape_surf.get_rect())
         surface.blit(shape_surf, rect)
@@ -70,6 +72,22 @@ class Firework:
 
     def explode(self):
         self.exploded = True
+        num_projectiles = random.randrange(
+            self.MIN_PROJECTILES, self.MAX_PROJECTILES)
+        self.create_circular_projectiles(num_projectiles)
+
+    def create_circular_projectiles(self, num_projectiles):
+        angle_dif = math.pi*2 / num_projectiles
+        current_angle = 0
+        vel = random.randrange(self.PROJECTILE_VEL - 1,
+                               self.PROJECTILE_VEL + 1)
+        for _ in range(num_projectiles):
+            x_vel = math.sin(current_angle) * vel
+            y_vel = math.cos(current_angle) * vel
+            color = random.choice(COLORS)
+            self.projectiles.append(Projectile(
+                self.x, self.y, x_vel, y_vel, color))
+            current_angle += angle_dif
 
     def move(self, max_width, max_height):
         if not self.exploded:
