@@ -1,8 +1,7 @@
-# 38:00  https://www.youtube.com/watch?v=8nIi2x2m6yE
-import math
 import pygame
 import time
 import random
+import math
 pygame.init()
 
 # WIDTH, HEIGHT = 600, 400
@@ -35,7 +34,7 @@ class Projectile:
         self.x = x
         self.y = y
         self.x_vel = x_vel
-        self.y = y_vel
+        self.y_vel = y_vel
         self.color = color
         self.alpha = 255
 
@@ -74,7 +73,11 @@ class Firework:
         self.exploded = True
         num_projectiles = random.randrange(
             self.MIN_PROJECTILES, self.MAX_PROJECTILES)
-        self.create_circular_projectiles(num_projectiles)
+
+        if random.randint(0, 1) == 0:
+            self.create_circular_projectiles(num_projectiles)
+        else:
+            self.create_star_projectiles()
 
     def create_circular_projectiles(self, num_projectiles):
         angle_dif = math.pi*2 / num_projectiles
@@ -88,6 +91,20 @@ class Firework:
             self.projectiles.append(Projectile(
                 self.x, self.y, x_vel, y_vel, color))
             current_angle += angle_dif
+
+    def create_star_projectiles(self):
+        angle_diff = math.pi/4
+        current_angle = 0
+        num_projectiles = 32
+        for i in range(1, num_projectiles + 1):
+            vel = self.PROJECTILE_VEL + (i % (num_projectiles / 8))
+            x_vel = math.sin(current_angle) * vel
+            y_vel = math.cos(current_angle) * vel
+            color = random.choice(COLORS)
+            self.projectiles.append(Projectile(
+                self.x, self.y, x_vel, y_vel, color))
+            if i % (num_projectiles / 8) == 0:
+                current_angle += angle_diff
 
     def move(self, max_width, max_height):
         if not self.exploded:
@@ -184,7 +201,7 @@ def main():
                 break
 
         for launcher in launchers:
-            launcher.loop(HEIGHT, WIDTH)
+            launcher.loop(WIDTH, HEIGHT)
 
         draw(launchers)
 
